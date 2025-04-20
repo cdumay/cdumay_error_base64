@@ -10,7 +10,7 @@
 //! typed error variants with associated codes and messages.
 
 use base64::DecodeError;
-use cdumay_error::{AsError, Error, define_errors, define_kinds};
+use cdumay_error::{AsError, Error, define_errors, define_kinds, ErrorConverter};
 use std::collections::BTreeMap;
 
 /// Defines a custom error kind for base64 encoding / decoding issues.
@@ -33,7 +33,8 @@ define_errors! {
 /// A helper structure that converts `base64::DecodeError` into a structured `Error`.
 pub struct Base64Error;
 
-impl Base64Error {
+impl ErrorConverter for Base64Error {
+    type Error = DecodeError;
     /// Converts a `base64::DecodeError` into a custom structured `Error`.
     ///
     /// # Arguments
@@ -45,8 +46,7 @@ impl Base64Error {
     /// # Returns
     ///
     /// Returns a structured `Error` with kind `DecodeBase64`, message, and details.
-    pub fn decode_error(error: &DecodeError, text: Option<String>, context: BTreeMap<String, serde_value::Value>) -> Error {
-        let text = text.unwrap_or(error.to_string());
+    fn convert(error: &DecodeError, text: String, context: BTreeMap<String, serde_value::Value>) -> Error {
         match error {
             DecodeError::InvalidByte(_, _) => InvalidByteError::new().set_message(text).set_details(context).into(),
             DecodeError::InvalidLength(_) => InvalidLengthError::new().set_message(text).set_details(context).into(),
@@ -73,7 +73,7 @@ mod tests {
         let ctx = BTreeMap::new();
 
         // Convert the base64 error into a structured application error
-        let custom = Base64Error::decode_error(&err, Some("Failed to decode base64".to_string()), ctx);
+        let custom = Base64Error::convert_error(&err, Some("Failed to decode base64".to_string()), ctx);
 
         // Validate the custom error kind and message
         assert_eq!(custom.kind.message_id(), "Base64-00001");
