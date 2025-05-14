@@ -13,9 +13,11 @@ A small utility crate for converting `base64::DecodeError` into structured, type
 - Provides unique error codes, HTTP status codes, and human-readable messages.
 - Easily attach contextual metadata for better debugging.
 - Simple integration into any Rust project using `base64` and `cdumay_error`.
+- Provides a convenient `convert_result!` macro for error conversion
 
 ### Usage
 
+Using the `Base64DecodeErrorConverter` directly:
 ```rust
 use base64::{engine::general_purpose, Engine as _};
 use cdumay_error::ErrorConverter;
@@ -29,3 +31,16 @@ fn decode_base64(input: &str) -> Result<Vec<u8>, cdumay_error::Error> {
         Base64DecodeErrorConverter::convert(&e, "Failed to decode base64".to_string(), context)
     })
 }
+```
+Using the `convert_result!` macro:
+```rust
+use base64::{engine::general_purpose, Engine as _};
+use cdumay_error::ErrorConverter;
+use std::collections::BTreeMap;
+use cdumay_error_base64::convert_result;
+
+fn decode_base64(input: &str) -> Result<Vec<u8>, cdumay_error::Error> {
+    convert_result!(general_purpose::STANDARD.decode(input), "Failed to decode base64")
+}
+```
+
