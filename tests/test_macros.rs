@@ -1,6 +1,6 @@
 use base64::Engine;
 use base64::engine::general_purpose;
-use cdumay_error::ErrorConverter;
+use cdumay_core::ErrorConverter;
 use cdumay_error_base64::convert_result;
 use std::collections::BTreeMap;
 
@@ -14,29 +14,24 @@ fn test_convert_result_with_context() {
     assert!(converted.is_err());
 
     let err = converted.unwrap_err();
-    assert_eq!(err.kind.message_id(), "Base64-00001");
-    assert!(err.message.contains("Test error"));
+    assert!(err.message().contains("Test error"));
 }
 
 #[test]
 fn test_convert_result_without_context() {
     let result = general_purpose::STANDARD.decode("!!! not base64 !!!");
-    let converted = convert_result!(result, "Test error");
+    let converted = convert_result!(result);
     assert!(converted.is_err());
 
     let err = converted.unwrap_err();
-    assert_eq!(err.kind.message_id(), "Base64-00001");
-    assert!(err.message.contains("Test error"));
+    assert!(err.message().contains("Invalid symbol"));
 }
 
 #[test]
 fn test_convert_result_minimal() {
     let result = general_purpose::STANDARD.decode("!!! not base64 !!!");
     let converted = convert_result!(result);
-    assert!(converted.is_err());
-
-    let err = converted.unwrap_err();
-    assert_eq!(err.kind.message_id(), "Base64-00001");
+    assert!(converted.is_err());    
 }
 
 #[test]

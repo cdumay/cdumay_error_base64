@@ -1,5 +1,5 @@
 use base64::{Engine as _, engine::general_purpose};
-use cdumay_error::ErrorConverter;
+use cdumay_core::ErrorConverter;
 use cdumay_error_base64::Base64DecodeErrorConverter;
 use std::collections::BTreeMap;
 
@@ -18,9 +18,8 @@ fn test_invalid_base64_decode_error() {
     // Convert the base64 error into a structured application error
     let custom = Base64DecodeErrorConverter::convert_error(&err, Some("Failed to decode base64".to_string()), ctx);
 
-    // Validate the custom error kind and message
-    assert_eq!(custom.kind.message_id(), "Base64-00001");
-    assert_eq!(custom.message, "Failed to decode base64");
+    // Validate the custom error message
+    assert_eq!(custom.message(), "Failed to decode base64");
 }
 
 #[test]

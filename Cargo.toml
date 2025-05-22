@@ -12,5 +12,5 @@ repository = "https://github.com/cdumay/cdumay_error_base64"
 
 [dependencies]
 base64 = "0.22"
-cdumay_error = { version = "1.0", features = ["derive"] }
+cdumay_core = "0.1"
 serde-value = "0.7"
