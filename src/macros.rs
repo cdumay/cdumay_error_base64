@@ -1,3 +1,4 @@
+/// Macro to convert a [`Result<T, base64::DecodeError>`] into a [`Result<T, cdumay_core::Error>`]
 #[macro_export]
 macro_rules! convert_result {
     ($result:expr, $context:expr, $text:expr) => {

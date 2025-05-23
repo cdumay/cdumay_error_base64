@@ -51,15 +51,10 @@ use base64::DecodeError;
 use cdumay_core::{define_errors, define_kinds, Error, ErrorConverter};
 use std::collections::BTreeMap;
 
-/// Defines a custom error kind for base64 decoding issues.
-/// The error kind has a code, an HTTP status code, and a description.
 define_kinds! {
     Base64Decode = (400, "Base64 decode error"),
 }
 
-/// Associates the defined kind with a typed error.
-///
-/// This macro creates new error types based on the `Base64Decode`.
 define_errors! {
     InvalidByteError = Base64Decode,
     InvalidLengthError = Base64Decode,
