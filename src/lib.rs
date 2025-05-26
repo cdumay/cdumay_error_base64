@@ -22,7 +22,7 @@
 //! use cdumay_core::{ErrorConverter, Error};
 //! use cdumay_error_base64::Base64DecodeErrorConverter;
 //!
-//! fn decode_base64(input: &str) -> Result<Vec<u8>, Error> {
+//! fn decode_base64(input: &str) -> cdumay_core::Result<Vec<u8>> {
 //!     general_purpose::STANDARD.decode(input).map_err(|e| {
 //!         let mut context = BTreeMap::new();
 //!         context.insert("input".to_string(), serde_value::Value::String(input.to_string()));
@@ -37,7 +37,7 @@
 //! use std::collections::BTreeMap;
 //! use cdumay_error_base64::convert_result;
 //!
-//! fn decode_base64(input: &str) -> Result<Vec<u8>, Error> {
+//! fn decode_base64(input: &str) -> cdumay_core::Result<Vec<u8>> {
 //!     let mut context = BTreeMap::new();
 //!     context.insert("input".to_string(), serde_value::Value::String(input.to_string()));
 //!     convert_result!(general_purpose::STANDARD.decode(input), context, "Failed to decode base64")
